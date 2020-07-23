@@ -1,4 +1,7 @@
+
+
 #include <FastLED.h>
+
 #define LED_PIN     7
 #define NUM_LEDS    100
 #define BRIGHTNESS 50
@@ -9,10 +12,12 @@ int udPin = 3;
 int lrPin = 4;
 int val = 0;
 int text_delay = analogRead(potPin);
+
 void setup() {
   FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
   Serial.begin(9600);
+  randomSeed(analogRead(0));
 }
 //TODO use different numbers as different colors in order to keep a colored drawing constant
 //RAINBOW snake
@@ -56,10 +61,12 @@ void loop() {
   delay(1000);
   for(int x = 0; x < 1000; x++)
   {
+    /*
     Serial.print(analogRead(lrPin));
     Serial.print('\n');
     Serial.print(analogRead(udPin));
     Serial.print('\n');
+    */
     moveTest();
   }
   //Serial.println(leds[0]);
@@ -92,18 +99,54 @@ void moveTest() {
   ud < 500 = down 
   lr > 500 = right*/
   int pos = 0;
+  int prevpos = 0;
   int xdir = 0;
   int ydir = 0;
-  int tail
+  //make dynamic array for tail of snake
+  //or make it length 100 and if there is no tail set to -1
+  //make tail by storing previous positions # tail length
+  leds[pos] = CRGB::DarkCyan;
+  FastLED.show();
+  int tail[99] = {0};
+  int snakelen = 1;
+  int fruitpos = -1;
+  boolean fruitcollision = true;
+  while(fruitcollision)
+  {
+    fruitpos = random(100);
+    //Serial.println(fruitpos);
+    if(!valinarray(tail,fruitpos,snakelen))
+    {
+      fruitcollision = false;
+    }
+  }
+  
+  
+  /*for(int x = 0; x < 100; x++)
+  {
+    Serial.print('\n');
+    Serial.print(tail[x]);
+    Serial.print('\n');
+  }*/
+  
   while(true){
+    /*fruitpos = random(0,100);
+    Serial.print(fruitpos);*/
+    fruitcollision = true;
+      for(int x = 99; x > 0; x--)
+      {
+        tail[x]=tail[x-1];
+      }
+    prevpos = pos;
     FastLED.clear();
     xdir = analogRead(lrPin);
     ydir = analogRead(udPin);
+    /*
     Serial.print(analogRead(lrPin));
     Serial.print('\n');
     Serial.print(analogRead(udPin));
     Serial.print('\n');
-    leds[pos] = CRGB::Blue;
+    */
     if(xdir > 600 && xdir > ydir)
     {
       //30 instead of 29 we want 39
@@ -114,10 +157,12 @@ void moveTest() {
     }
     else if(xdir < 400 && xdir < ydir)
     {
-      if((pos+1) < 100)
-        if((pos+1)%10 == 0)
+      //if((pos+1) < 100)
+      if((pos+1) == 100)
+          pos = 90;
+      else if((pos+1)%10 == 0)
           pos-=9;
-        else  
+      else  
           pos++;
     }
     else if(ydir < 400 && ydir < xdir)
@@ -126,6 +171,9 @@ void moveTest() {
         pos += 10;
       else if(pos + 10 > 100)
         pos -= 90;
+      else if(pos = 90)
+        pos = 0;
+      
     }
     else if(ydir > 600 && ydir > xdir)
     {
@@ -134,11 +182,127 @@ void moveTest() {
       else if(pos-10 < 0)
         pos +=90;
     }
-    delay(150);
-    FastLED.show();
+    else
+    {
+      /*find what direction the snake is going and move it that direction*/
+    }
+    Serial.print("currentpos=");
+    Serial.println(pos);
+    Serial.print("tail=");
+    Serial.println(tail[1]);
+    if(pos != prevpos)
+    {
+      tail[0] = pos;
+      for(int x = 0; x < snakelen; x++)
+      {
+          //Serial.println(int(((255/25)*snakelen%25)));
+          leds[tail[x]] = CHSV(int(((255/25)*(x%25))), 255, 125);
+      }
+      
+      if(pos == fruitpos)
+      {
+        snakelen++;
+        
+        while(fruitcollision)
+        {
+          fruitpos = random(100);
+          //Serial.println(fruitpos);
+          if(!valinarray(tail,fruitpos,snakelen))
+          {
+            fruitcollision = false;
+          }
+        }
+      }
+      
+      if(fruitpos != -1)
+      {
+        leds[fruitpos] = CHSV(0,255,255);
+      }
+      delay(150);
+      FastLED.show();
+    }
+    /*
+    if(pos == prevpos && snakelen > 1)
+    {
+      Serial.println("automovefunc");
+      Serial.print("diff=");
+      Serial.println(pos-tail[1]);
+      //find direction travelling
+      if(pos-tail[1]==1)//moving left
+      {
+        //if((pos+1) < 100)
+        if((pos+1) == 100)
+          pos = 90;
+        else if((pos+1)%10 == 0)
+          pos-=9;
+        else  
+          pos++;
+      }
+      if(pos-tail[1]==-1)//moving right
+      {
+        if(((pos-1) % 10) == 9 || pos-1 == -1)
+        pos+=9;
+      else
+        pos--;
+      }
+      if(pos-tail[1]==-10)//moving up
+      {
+        if((pos+10) < 100)
+          pos += 10;
+         else if(pos + 10 > 100)
+          pos -= 90;
+        else if(pos = 90)
+          pos = 0;
+       
+      }
+      if(pos-tail[1]==10)//moving down
+      {
+        if((pos-10) >= 0)
+        pos -= 10;
+      else if(pos-10 < 0)
+        pos +=90;
+      }
+      tail[0] = pos;
+      for(int x = 0; x < snakelen; x++)
+      {
+          leds[tail[x]] = CHSV(int(((255/25)*(x%25))), 255, 125);
+      }
+      
+      if(pos == fruitpos)
+      {
+        snakelen++;
+        
+        while(fruitcollision)
+        {
+          fruitpos = random(100);
+          //Serial.println(fruitpos);
+          if(!valinarray(tail,fruitpos,snakelen))
+          {
+            fruitcollision = false;
+          }
+        }
+      }
+      
+      if(fruitpos != -1)
+      {
+        leds[fruitpos] = CHSV(0,255,255);
+      }
+      delay(150);
+      FastLED.show();
+    }
+    */
   }
 }
 
+bool valinarray(int array[],int element,int len)
+{
+  for (int i = 0; i < len; i++) {
+      if (array[i] == element) {
+          return true;
+      }
+    }
+  return false;
+}
 void spinningRainbow() {
   // variable used for the initial hue of the rainbow
   // we start it out at 0
