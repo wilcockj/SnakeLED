@@ -5,6 +5,8 @@
 #define DELAY 100
 CRGB leds[NUM_LEDS];
 int potPin = 1;
+int udPin = 3;
+int lrPin = 4;
 int val = 0;
 int text_delay = analogRead(potPin);
 void setup() {
@@ -52,6 +54,14 @@ void loop() {
   spinningRainbow();
   FastLED.show();
   delay(1000);
+  for(int x = 0; x < 1000; x++)
+  {
+    Serial.print(analogRead(lrPin));
+    Serial.print('\n');
+    Serial.print(analogRead(udPin));
+    Serial.print('\n');
+    moveTest();
+  }
   //Serial.println(leds[0]);
   for(int x = 0; x < 10; x++)
   {
@@ -73,6 +83,60 @@ void loop() {
   spinningRainbow();
   FastLED.show();
   delay(1000);
+}
+
+void moveTest() {
+  FastLED.clear();
+  /*ud > 500 = up
+  lr < 500 = left
+  ud < 500 = down 
+  lr > 500 = right*/
+  int pos = 0;
+  int xdir = 0;
+  int ydir = 0;
+  int tail
+  while(true){
+    FastLED.clear();
+    xdir = analogRead(lrPin);
+    ydir = analogRead(udPin);
+    Serial.print(analogRead(lrPin));
+    Serial.print('\n');
+    Serial.print(analogRead(udPin));
+    Serial.print('\n');
+    leds[pos] = CRGB::Blue;
+    if(xdir > 600 && xdir > ydir)
+    {
+      //30 instead of 29 we want 39
+      if(((pos-1) % 10) == 9 || pos-1 == -1)
+        pos+=9;
+      else
+        pos--;
+    }
+    else if(xdir < 400 && xdir < ydir)
+    {
+      if((pos+1) < 100)
+        if((pos+1)%10 == 0)
+          pos-=9;
+        else  
+          pos++;
+    }
+    else if(ydir < 400 && ydir < xdir)
+    {
+      if((pos+10) < 100)
+        pos += 10;
+      else if(pos + 10 > 100)
+        pos -= 90;
+    }
+    else if(ydir > 600 && ydir > xdir)
+    {
+      if((pos-10) >= 0)
+        pos -= 10;
+      else if(pos-10 < 0)
+        pos +=90;
+    }
+    delay(150);
+    FastLED.show();
+  }
 }
 
 void spinningRainbow() {
