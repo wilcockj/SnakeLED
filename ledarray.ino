@@ -348,6 +348,7 @@ void intro(){
 
 //got through all coloumns and set colors 
 //yellow then redorange then pink/purple then green then blue
+//change y value faster to overlap?
 for(int y = 0; y < 5; y++)
 {  
   for(int x = 0; x < 10; x++)
@@ -355,20 +356,20 @@ for(int y = 0; y < 5; y++)
     for(int i = 0; i < 10; i++)
     {
       if(y == 0)
-        if(mytext[x][9-i] == 1) 
-           leds[i+10*x] = CHSV(45,255,200);
+        if(mytext[i][x] == 1) 
+           leds[9-x+10*i] = CHSV(45,255,200);
       if(y == 1)
-        if(mytext[x][9-i] == 1) 
-           leds[i+10*x] = CHSV(14,255,200);
+        if(mytext[i][x] == 1) 
+           leds[9-x+10*i] = CHSV(14,255,200);
       if(y == 2)
-        if(mytext[x][9-i] == 1) 
-           leds[i+10*x] = CHSV(211,255,200);
+        if(mytext[i][x] == 1) 
+           leds[9-x+10*i] = CHSV(211,255,200);
       if(y == 3)
-        if(mytext[x][9-i] == 1) 
-           leds[i+10*x] = CHSV(125,255,200);
+        if(mytext[i][x] == 1) 
+           leds[9-x+10*i] = CHSV(125,255,200);
       if(y == 4)
-        if(mytext[x][9-i] == 1) 
-           leds[i+10*x] = CHSV(164,255,200);
+        if(mytext[i][x] == 1) 
+           leds[9-x+10*i] = CHSV(164,255,200);
     }
     delay(100);
     FastLED.show();
