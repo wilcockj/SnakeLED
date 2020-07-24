@@ -55,8 +55,9 @@ byte text_r10[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 
 void loop() {
+  intro();
   FastLED.show();
-  spinningRainbow();
+  //spinningRainbow();
   FastLED.show();
   delay(1000);
   for(int x = 0; x < 1000; x++)
@@ -87,7 +88,7 @@ void loop() {
     delay(30);
   }
   //spinningRainbow();
-  spinningRainbow();
+  //spinningRainbow();
   FastLED.show();
   delay(1000);
 }
@@ -330,6 +331,51 @@ bool valinarray(int array[],int element,int len)
     }
   return false;
 }
+void intro(){
+  FastLED.clear();
+  byte mytext[10][10] = {
+{1,1,1,0,0,0,0,1,0,0},
+{0,1,0,0,1,0,0,1,1,1},
+{0,1,0,1,0,1,0,1,0,1},
+{1,1,0,1,1,1,0,1,0,1},
+{0,0,0,1,0,1,0,0,0,0},
+{1,1,1,0,0,0,0,1,0,1},
+{1,0,1,0,0,0,0,1,1,1},
+{1,1,1,0,1,1,1,0,1,0},
+{1,0,1,0,1,0,1,0,1,0},
+{1,1,1,0,1,1,1,0,1,0}
+};
+
+//got through all coloumns and set colors 
+//yellow then redorange then pink/purple then green then blue
+for(int y = 0; y < 5; y++)
+{  
+  for(int x = 0; x < 10; x++)
+  {
+    for(int i = 0; i < 10; i++)
+    {
+      if(y == 0)
+        if(mytext[x][9-i] == 1) 
+           leds[i+10*x] = CHSV(45,255,200);
+      if(y == 1)
+        if(mytext[x][9-i] == 1) 
+           leds[i+10*x] = CHSV(14,255,200);
+      if(y == 2)
+        if(mytext[x][9-i] == 1) 
+           leds[i+10*x] = CHSV(211,255,200);
+      if(y == 3)
+        if(mytext[x][9-i] == 1) 
+           leds[i+10*x] = CHSV(125,255,200);
+      if(y == 4)
+        if(mytext[x][9-i] == 1) 
+           leds[i+10*x] = CHSV(164,255,200);
+    }
+    delay(100);
+    FastLED.show();
+  }
+}
+delay(5000);
+}
 void spinningRainbow() {
   // variable used for the initial hue of the rainbow
   // we start it out at 0
@@ -444,7 +490,7 @@ void heart(){
       if (heart_r4[i]==1)
         leds[arrayrealdiff2-i+30] = CRGB::HotPink;
     }
-    delay(200);
+    delay(100);
     FastLED.show();
   }
   
