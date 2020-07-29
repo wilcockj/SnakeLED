@@ -7,7 +7,7 @@ to "teleport" to the other side when you hit a wall. You will die if you hit you
 
 This board is currently wired to be controlled by a joystick on a breadboard.
 ![](Images/breadboard.jpg)
-The 10x10 LED array was purchased in raw parts form and each part was soldered by hand by myself
+The 10x10 LED array was purchased unsoldered and each node had to be soldering by myself.
 
 
 
