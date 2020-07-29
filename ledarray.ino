@@ -1,6 +1,4 @@
-
-
-#include <FastLED.h>
+ #include <FastLED.h>
 
 #define LED_PIN     7
 #define NUM_LEDS    100
@@ -371,7 +369,7 @@ for(int y = 0; y < 5; y++)
         if(mytext[i][x] == 1) 
            leds[9-x+10*i] = CHSV(164,255,200);
     }
-    delay(100);
+    delay(50);
     FastLED.show();
   }
 }
