@@ -8,7 +8,7 @@ As the snake gets longer it becomes a more complete rainbow, repeating for every
 
 This board is currently wired to be controlled by a joystick on a breadboard.
 ![](Images/breadboard.jpg)
-The 10x10 LED array was purchased unsoldered and each node had to be soldered by myself.
+The 10x10 LED array was purchased unsoldered then each node had to be soldered by myself.
 
 Video of the Board in Action
 https://www.youtube.com/watch?v=8m-Op82Kzys
